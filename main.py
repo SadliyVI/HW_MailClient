@@ -1,22 +1,32 @@
 from mail_client import MailClient
+import  configparser
 
-if __name__ == '__main__':
-    # Пример использования
-    mail_client = MailClient(
-        login='your_login@gmail.com',
-        password='your_password'
-    )
 
-    # Отправка письма
+def send_email(mail_client):
     mail_client.send_email(
-        subject='Test Subject',
-        recipients=['recipient1@example.com'],
-        message='Test Message'
+        subject = input('Введите тему сообщения: '),
+        recipients = [input('Введите адрес получателя: ')],
+        message = input('Введите текст сообщения: ')
     )
 
-    # Получение письма
+def receive_email(mail_client):
     try:
-        email_message = mail_client.receive_email(header='Test Subject')
+        email_message = mail_client.receive_email(header = 'Test Subject')
         print('Письмо получено:', email_message)
     except ValueError as e:
         print(e)
+
+if __name__ == '__main__':
+    # Пример использования
+    config = configparser.ConfigParser()
+    config.read('settings.ini')
+    mail_client = MailClient(
+        login = config['MailAtr']['login'],
+        password = config['MailAtr']['password']
+    )
+
+    # Отправка письма
+    send_email(mail_client)
+
+    # Получение письма
+    receive_email(mail_client)
